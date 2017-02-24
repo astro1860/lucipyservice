@@ -153,7 +153,7 @@ def luciplot(data):
 	    #ax.set_title(" Title", size=8)
 	    ax.set_title('SI score: %s\nDetected %s neighborhoods' % (round(SI_score,3),len(unique_labels)) ,size=6)
 
-	img_loc = 'Desktop/luci_test.png'#can change to your own directory
+	img_loc = 'data/luci_test.png'#can change to your own directory
 	fig.savefig(img_loc)
 	fig.clear()
 	
