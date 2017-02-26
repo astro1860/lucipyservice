@@ -26,7 +26,7 @@ class ScenarioIDReceiver(RemoteServiceResponseHandler):
         print(h)
         s.send(Message({'run': 'scenario.geojson.Get', 'callID': 3765, "ScID": h['ScID']}), CreateImage(h['callID']))
 
-savp = SysArgvProcessor(sys.argv, host="129.132.6.33", port=7654)
+savp = SysArgvProcessor(sys.argv, host="129.132.6.33", port=3000)
 
 inputs = {
     "ScID": "number",

@@ -1,32 +1,10 @@
-# Basic Stuff
-
 import numpy as np
 import json
-
-import itertools
-import pandas as pd
-import operator
-# Geo Stuff
 import shapely
 from shapely.geometry import Polygon
-
-# Plot Stuff
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-
-
-# Machine Learning Stuff
 from sklearn import cluster,metrics
 from scipy.spatial import distance
-# from sklearn.model_selection import GridSearchCV
-
-# turn warnings off
-import warnings
-warnings.filterwarnings('ignore')
-
-#debug stuff
-import pdb
-from IPython.core.debugger import Tracer
 from descartes import PolygonPatch
 
 def luciplot(data):
@@ -35,47 +13,36 @@ def luciplot(data):
 	polygon_alles = []
 	points_alles = []
 	for i,feature in enumerate(data['features']):
-	    if feature['geometry']["type"]=="MultiPolygon":
-	#for each cube, find the collections of all 8 points if i > 0
+	    if 'static' in feature['properties']:
+	        ifdynamic = False
+	    else:
+	        ifdynamic = True
+	#     print (ifstatic)
+	    if (feature['geometry']["type"]=="MultiPolygon" or feature['geometry']["type"]=="Polygon") and ifdynamic:
+	        #print(feature['properties'])
 	        convexs = set()
 	        centroid = []
 
 	        for surfaces in feature['geometry']['coordinates']:
-	            
 	            surface = surfaces[0]
 	            surface_z = set(x[2] for x in surface)
 	            if len(surface_z) == 1:
 	                surface_2d = list((x[0],x[1]) for x in surface)
 	            for p in surface:
 	                convexs.add(tuple(p))
-	        convexs = list(convexs)
-	#         print(convexs)
-	        centroid = [sum([x[0] for x in convexs])/8.0,sum([x[1] for x in convexs])/8.0,sum([x[2] for x in convexs])/8.0]
-	        centroid_alles.append(centroid)
-	        points_alles.append(list(itertools.chain.from_iterable(surface_2d[0:4])))
+
 	        polygon = Polygon(surface_2d)
 	        polygon = shapely.geometry.polygon.orient(polygon)
 	        polygon_alles.append(polygon)
-	X = np.matrix(centroid_alles)
-	X_points = np.matrix(points_alles)
 
 
-	adj_poly = np.zeros((47,47))
+
+	adj_poly = np.zeros((len(polygon_alles),len(polygon_alles)))
 	for c,c_poly in enumerate(polygon_alles):
 	    for a,a_poly in enumerate(polygon_alles):
 	        adj_poly[c,a] = c_poly.distance(a_poly)
 
-	# compute pairwise distance between centroids
-	Y = distance.pdist(X,'euclidean')# pairwise distance 
-	Z = distance.cdist(X,X,'euclidean')# 47 by 47 
-
-	Y_points = distance.pdist(X_points,'euclidean')
-	Z_points = distance.cdist(X_points,X_points,'euclidean')
-	#2D matrix
-	X_2D = X[:,0:2]
-	Y_2D = distance.pdist(X_2D,'euclidean')# pairwise distance 
-	Z_2D = distance.cdist(X_2D,X_2D,'euclidean')# 47 by 47  
-	pw_dis = list(adj_poly[np.triu_indices(47)])
+	pw_dis = list(adj_poly[np.triu_indices(len(polygon_alles))])
 	pw = [y for y in pw_dis if y != 0.0]
 
 	min_per = 2
@@ -106,7 +73,7 @@ def luciplot(data):
 	                para_set_max = [val,eps,min_samples]
 	        
 	newlist = sorted(para_dist, key=lambda k: k['SI'],reverse=True) 
-	good_para = newlist[0:9]
+	good_para = newlist[0:4]
 
 	fig = plt.figure(1, dpi=360)
 	fig.subplots_adjust(hspace = 0.4,wspace=0.05)
@@ -132,10 +99,12 @@ def luciplot(data):
 	    colorcode = {}
 	    for k, col in zip(unique_labels, colors):
 	        class_member_mask = (labels == k)
-	        xy = X_2D[class_member_mask]
-	        ax.plot(xy[:, 0], xy[:, 1],'s', markerfacecolor=col, markeredgecolor=col,markersize=0,alpha=0.7)
 	        colorcode[k] = col
-
+	    
+	    for i,poly in enumerate(polygon_alles):
+	            x,y = poly.exterior.xy
+	            ax.plot(x, y, color='#6699cc', alpha=0.7,
+	            linewidth=0, solid_capstyle='round', zorder=2)
 	        
 	## plot polygons 
 	    color_space = []
@@ -150,10 +119,10 @@ def luciplot(data):
 	    ax.get_xaxis().set_visible(False)
 	    ax.get_yaxis().set_visible(False)
 	    ax.set_frame_on(False)
-	    #ax.set_title(" Title", size=8)
-	    ax.set_title('SI score: %s\nDetected %s neighborhoods' % (round(SI_score,3),len(unique_labels)) ,size=6)
+	    ax.set_title('SI score: %s\nDetected %s neighborhoods' % (round(SI_score,3),len(unique_labels)) ,size=10)
 
-	img_loc = 'data/luci_test.png'#can change to your own directory
+
+	img_loc = 'data/luci_test_.png'#can change to your own directory
 	fig.savefig(img_loc)
 	fig.clear()
 	
