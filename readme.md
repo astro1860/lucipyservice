@@ -4,16 +4,18 @@
 The service connects to Qua-viewer via Luci. It reads the scenario display in Qua viewer and process with the geojson data using luciplot.py. The plot contains a collection of nine images of neighbourhood detection using different parameter set using DBSCAN. The plot is displayed in the right panel in qua-viewer
 ### Set up
 This project requires python 3+
-Python depedencies include:numpy,shapely,matplotlib,sklearn,scipy,descartes
-simply run in your terminal:
 
+Python depedencies include:numpy,shapely,matplotlib,sklearn,scipy,descartes
+
+simply run in your terminal:
+```
 pip3 install numpy
 pip3 install shapely
 pip3 install matplotlib
 pip3 install sklearn
 pip3 install scipy
 pip3 install descartes
-
+```
 ### How to run it?
 Step1. simply run plot_service.py
 
