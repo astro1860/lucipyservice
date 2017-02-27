@@ -1,8 +1,10 @@
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
 import numpy as np
 import json
 import shapely
 from shapely.geometry import Polygon
-import matplotlib.pyplot as plt
 from sklearn import cluster,metrics
 from scipy.spatial import distance
 from descartes import PolygonPatch
