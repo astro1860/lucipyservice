@@ -73,7 +73,7 @@ def luciplot(data):
 	                para_set_max = [val,eps,min_samples]
 	        
 	newlist = sorted(para_dist, key=lambda k: k['SI'],reverse=True) 
-	good_para = newlist[0:4]
+	good_para = newlist[0:1]
 
 	fig = plt.figure(1, dpi=360)
 	fig.subplots_adjust(hspace = 0.4,wspace=0.05)
