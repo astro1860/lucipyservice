@@ -122,7 +122,7 @@ def luciplot(data):
 	    ax.get_xaxis().set_visible(False)
 	    ax.get_yaxis().set_visible(False)
 	    ax.set_frame_on(False)
-	    ax.set_title('SI score: %s\nDetected %s neighborhoods' % (round(SI_score,3),len(unique_labels)) ,size=10)
+	    ax.set_title('SI score: %s\nDetected %s neighborhoods' % (round(SI_score,3),len(unique_labels)) ,size=14)
 
 
 	img_loc = 'data/luci_test_.png'#can change to your own directory
