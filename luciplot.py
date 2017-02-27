@@ -77,7 +77,8 @@ def luciplot(data):
 
 	fig = plt.figure(1, dpi=360)
 	fig.subplots_adjust(hspace = 0.4,wspace=0.05)
-	ind_plot = [221,222,223,224]#location of subplots
+	#ind_plot = [221,222,223,224]#location of subplots
+	ind_plot = [111]
 	#parameter swap
 	for ind,val in enumerate(good_para):
 	   
