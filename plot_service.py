@@ -10,8 +10,8 @@ class CreateImage(ResponseHandler):
         #print("geo_msg", message)
         h = message.getHeader()
         geometry = h["result"]["geometry_output"]["geometry"]
-        # print("get Geojson result")
-        # print(geometry)
+        #print("get Geojson result")
+        #print(geometry)
 
         img = luciplot(geometry)
 
@@ -19,7 +19,7 @@ class CreateImage(ResponseHandler):
         msg = Message({
                 'result': {
                     'image' : AttachmentFile(filename=img)
-                }, 
+                },
                 'callID':self.callID}) 
         print("send...")
         print(msg.getHeader())
